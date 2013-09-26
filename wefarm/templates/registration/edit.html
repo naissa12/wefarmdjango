@@ -5,10 +5,9 @@
   <h1>Edit</h1>
     <form method='post' action=''>
       {% csrf_token %}
-      <br />
-        {{ uform.as_p }}
-        {{ form.as_p }}
-        <input name = "edit" type="submit" value="Edit" />
+      {{ uform.as_p }}
+      {{ form.as_p }}
+      <input name = "edit" type="submit" value="Edit" />
     </form>
 
 {% endblock %}
