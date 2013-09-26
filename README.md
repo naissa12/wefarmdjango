@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-wefarm-django
-=============
 Welcome to WeFarm!
 
 WeFarm was created with Django 1.5.
@@ -40,7 +37,5 @@ Sync database tables:
 Run server:  
 `python manage.py runserver`
 
-=======
-wefarmdjango
-============
->>>>>>> 3ed6149b6ea665a37719e46fc267d56ec8738b69
+
+  
