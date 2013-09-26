@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "New Farmer Registration" %}{% endblock %}
+{% block content %}
+  <h1>New Farmer Registration</h1>
+    <form method="post" action="">
+      {% csrf_token %}
+      <br />
+      {{ form.as_p }}
+      <input type="submit" value="Register" />
+    </form>
+{% endblock %}
+

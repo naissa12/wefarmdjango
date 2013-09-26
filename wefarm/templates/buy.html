@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Buy {{ farmer.produce }} from {{ farmer.farm }}" %}{% endblock %}
+{% block content %}
+
+<h1>Buy {{ farmer.produce }} from {{ farmer.farm }} for {{ farmer.produce_price }}</h1>
+<br />
+<p>&larr; <a href = "{% url 'profile' farmer.user.pk %}">Back to {{ farmer.farm }}</a></p>
+<br />
+
+{% if checkout_uri %}
+  <div id="wepay-iframe-div">
+    <script type="text/javascript" src="https://www.wepay.com/js/iframe.wepay.js">
+    </script>
+
+    <script type="text/javascript">
+        WePay.iframe_checkout("wepay-iframe-div", "{{ checkout_uri }}");
+    </script>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+  {% if auth_url %}
+  <strong>
+    Please create an account to manage your money: 
+    <a class='btn btn-primary' href="{% url 'authorize' %}">Click here to create your account</a>
+  </strong>
+  {% endif %}
+
+  {% if farmer.has_access_token %}
+    <a href="{% url 'buy' farmer.pk %}" class="btn btn-danger btn-large" id="buy-now-button">Buy Now!</a>
+  {% endif %}
+  
+  <br />
+  <br />
+  <p>
+    <strong>Name:</strong> {{ farmer.user.first_name }} {{ farmer.user.last_name }}
+    <br />
+
+    <strong>Email:</strong> {{ farmer.user.email }}
+    <br />
+
+    <strong>Farm:</strong> {{ farmer.farm }}
+    <br />
+
+    <strong>Produce:</strong> {{ farmer.produce }}
+    <br />
+
+    <strong>Produce price:</strong> {{ farmer.produce_price }}
+    <br />
+  </p>
+
+  {% if show_edit %}
+    <p>
+      <a href = "{% url 'edit' %}">Edit</a>
+    </p>
+  {% endif %}
+
+{% endblock %}
