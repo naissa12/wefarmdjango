@@ -109,7 +109,6 @@ class Farmer(models.Model):
 
         try:
             create_response = wepay.call('/checkout/create', params)
-
             checkout_uri = create_response['checkout_uri']
 
             return True, checkout_uri
@@ -133,37 +132,6 @@ class Farmer(models.Model):
 
     def __unicode__(self):
         return self.user.first_name + ' ' + self.user.last_name
-
-    def create_checkout(self, redirect_uri):
-        production = settings.WEPAY['in_production']
-        access_token = self.wepay_access_token
-
-        wepay = WePay(production, access_token)
-
-        name = self.user.first_name + " " + self.user.last_name
-        desc = "Purchasing " + self.produce + " from " + name
-        price = str(self.produce_price)
-        account_id = str(self.get_account_id())
-        app_fee = str(Decimal('0.1') * self.produce_price)
-
-        params = {
-            'account_id': account_id,
-            'short_description': desc,
-            'type': 'GOODS',
-            'app_fee': app_fee,
-            'amount': price,
-            'mode': 'iframe'
-        }
-
-        try:
-            create_response = wepay.call('/checkout/create', params)
-
-            checkout_uri = create_response['checkout_uri']
-
-            return True, checkout_uri
-
-        except WePayError as e:
-            return False, e
 
 
 def user_get_absolute_url(self):

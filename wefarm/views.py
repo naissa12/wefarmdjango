@@ -1,6 +1,6 @@
 from models import Farmer
 from forms import FarmerForm, UserEditForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from wepay import WePay
 import settings
@@ -11,9 +11,8 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
+
 # GET /
-
-
 def index(request):
     items = Farmer.objects.all()
     context = {'farmer_list': items}
@@ -67,6 +66,7 @@ def buy(request, pk):
     return render(request, 'buy.html', context)
 
 
+# GET /authorize/
 @login_required
 def authorize(request):
     user = request.user
@@ -91,6 +91,10 @@ def authorize(request):
                 farmer.save_access_token(token['access_token'])
                 created = farmer.create_account()
 
+                if not created[0]:
+                    return HttpResponse(
+                        "WePay error on update. %s" % error, status=500)
+
             # redirect back to profile
             return HttpResponseRedirect(reverse('profile', args=[user.pk]))
 
@@ -102,9 +106,10 @@ def authorize(request):
             return redirect(url)
 
     except WePayError as error:
-        return "Received a WePay Error" + str(error)
+        return HttpResponse("WePay error on update. %s" % error, status=500)
 
 
+# GET /edit/
 @login_required
 def edit(request):
 
@@ -119,6 +124,8 @@ def edit(request):
         if uform.is_valid() and form.is_valid():
             uform.save()
             form.save()
+
+            return redirect(reverse('home'))
     else:
         form = FarmerForm(instance=f)
         uform = UserEditForm(instance=u)
