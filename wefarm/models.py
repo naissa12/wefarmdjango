@@ -26,6 +26,9 @@ class Farmer(models.Model):
         default=0, null=True)
     objects = FarmerManager()
 
+    def get_absolute_url(self):
+        return 'farmers/%i/' % self.user.pk
+
     def create_account(self):
         """
         Create a WePay account to deposit any money for produce.
@@ -132,35 +135,36 @@ class Farmer(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
     def create_checkout(self, redirect_uri):
-          production = settings.WEPAY['in_production']
-          access_token = self.wepay_access_token
+        production = settings.WEPAY['in_production']
+        access_token = self.wepay_access_token
 
-          wepay = WePay(production, access_token)
+        wepay = WePay(production, access_token)
 
-          name = self.user.first_name + " " + self.user.last_name
-          desc = "Purchasing " + self.produce + " from " + name
-          price = str(self.produce_price)
-          account_id = str(self.get_account_id())
-          app_fee = str(Decimal('0.1') * self.produce_price)
+        name = self.user.first_name + " " + self.user.last_name
+        desc = "Purchasing " + self.produce + " from " + name
+        price = str(self.produce_price)
+        account_id = str(self.get_account_id())
+        app_fee = str(Decimal('0.1') * self.produce_price)
 
-          params = {
-              'account_id': account_id,
-              'short_description': desc,
-              'type': 'GOODS',
-              'app_fee': app_fee,
-              'amount': price,
-              'mode': 'iframe'
-          }
+        params = {
+            'account_id': account_id,
+            'short_description': desc,
+            'type': 'GOODS',
+            'app_fee': app_fee,
+            'amount': price,
+            'mode': 'iframe'
+        }
 
-          try:
-              create_response = wepay.call('/checkout/create', params)
+        try:
+            create_response = wepay.call('/checkout/create', params)
 
-              checkout_uri = create_response['checkout_uri']
+            checkout_uri = create_response['checkout_uri']
 
-              return True, checkout_uri
+            return True, checkout_uri
 
-          except WePayError as e:
-              return False, e
+        except WePayError as e:
+            return False, e
+
 
 def user_get_absolute_url(self):
     return "/farmers/%i/" % self.pk

@@ -7,7 +7,8 @@ ADMINS = (
     ('WePay', 'wefarm@wepay.com'),
 )
 
-
+AUTH_PROFILE_MODULE = 'wefarm.Farmer'
+LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 DATABASES = {
